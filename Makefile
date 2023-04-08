@@ -2,7 +2,7 @@ NAME	= philosophers
 
 CC	= cc
 INCLUDE		= -I ./include
-CFLAGS		= -g -Wall -Wextra -Werror $(INCLUDE)
+CFLAGS		= -g -pthread -Wall -Wextra -Werror $(INCLUDE)
 
 RM	= rm -rf
 

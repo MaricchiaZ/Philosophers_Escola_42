@@ -53,3 +53,82 @@ Semáforos:  - inicialização
 Enquanto um processo estiver realizando operações em um semáforo, nenhum outro pode realizar, devendo esperar que o primeiro encerre ela.
 
 Um semáforo binário, ou princípio de exculsão mútua, é um MUTEX, podendo assumir o valor de wait = 0, ou de signal = 1. É usado em programação concorrente, para evitar que dois processos ou threads tenham acesso simultâneo a um recurso partilhado.
+
+### Exigências
+- O(s) seu(s) programa(s) deverá(ão) aceitar os seguintes argumentos:
+número_de_filósofos tempo_até_morrer_de fome tempo_da_refeição tempo_de_dormir e (número_de_refeições_por_filo - ARG OPICIONAL)
+◦ O número de filósofos e também o número de garfos.
+◦ tempo_até_morrer_de fome (em milisegundos): Se um filósofo não começar a comer tempo_até_morrer_de fome desde o início da sua última refeição ou do início da simulação, ele morre.
+◦ tempo_da_refeição (em milissegundos): O tempo que um filósofo demora a comer. Durante esse tempo, eles terão de segurar dois garfos.
+◦ time_to_sleep (em milissegundos): O tempo que um filósofo vai passar a dormir.
+◦ número_de_refeições_por_filo (argumento opcional): Se todos os filósofos comeram pelo menos o úmero_de_refeições_por_filo vezes, a simulação pára. E se não for especificada, a simulação pára quando um
+morre o filósofo.
+- Cada filósofo tem um número que varia de 1 ao número_de_filósofos.
+- É uma mesa circular filósofo número 1 senta-se, e ao lado dele senta-se o 2... assim vai até que o último filósofo senta-se ao lado do filo1.
+
+Seu programa deve retornar no terminal qualquer mudança no estado dos filósofos:
+◦ time_in_ms X pegou um garfo
+◦ time_in_ms X está comendo
+◦ time_in_ms X está dormindo
+◦ time_in_ms X está pensando
+◦ time_in_ms X morreu
+Substituir o X pelo número do filósofo.
+- Uma mensagem de estado apresentada não deve ser misturada com outra mensagem.
+- Uma mensagem anunciando a morte de um filósofo não deve ser exibida mais do que 10 ms
+após a morte efectiva do filósofo.
+- Mais uma vez, os filósofos devem evitar a morte!
+
+## Resolução:
+
+Este projeto é sobre a *programação simultânea* que permite que um programa execute várias tarefas simultaneamente em vez de ter que esperar que o resultado de uma operação passe para a próxima (o sistema operacional funciona assim).
+
+Existem três maneiras de implementar a simultaneidade em nossos programas: *threads, processos e multiplexação*. Vamos nos concentrar em tópicos.
+
+### Thread (mandatório)
+
+Thread: Uma thread de execução é uma sequência lógica de instruções dentro de UM processo que é gerenciado  automaticamente pelo kernel do sistema operacional. Um programa sequencial regular tem uma única thread, mas os sistemas operacionais modernos nos permitem criar várias threads em nossos programas, todas executadas em paralelo.
+
+Uma thread é uma linha de execussão dentro de um processo. Cada thread tem seu próprio estado de processamento e sua própria pilha, mas compartilham memória com as treads irmãs, filhas de um mesmo processo. As threads são linhas de execussões de um processo que podem rodar concomitantemente.
+
+As threads são menos custosas que os processos, e não possuem a hierarquia "pai-filho",  e como elas atuam sobre uma mesma área da memória são mais ágeis do que vários processos conversando.
+
+### Processos (bônus)
+
+Em programação, um processo é uma instância de um programa em execução em um sistema operacional. Cada processo tem sua própria memória e espaço de endereçamento, e é geralmente executado em seu próprio ambiente isolado. Os processos geralmente interagem com outros processos através de mecanismos definidos pelo sistema operacional, como sinais, pipes e sockets. Nos sistemas operacionais tais como Windows e Linux muitos dos seus recursos operam sobre a forma de processos.
+
+A função fork() é um system call capaz de criar um novo processo denominado filho, que é uma cópia exata do processo original denominado pai, e é uma técnica para poder dividir o trabalho. O fluxo é ramificado após a execução do fork, e é possível distiguir qual processo é qual pelo PID retornado a função fork. O processo filho tem o PID = 0, já o processo pai tem o PID = int < 0 (qualquer int maior que zero).
+
+Quando o sistema operacional lança um processo, esse processo tem uma memória reservada para poder realizar a sua execução, ou seja, sua memória fica protegida somente para o seu uso, e para se comunicar com outros processos é necessário algum mecanismo que permita essa comunicação ou alguma outra forma que os dados sejam compartilhados entre os processos, é nesse momento que entra em cena o IPC.
+
+### Comparando Threads e Processos
+
+Multiprocessos e multithreads são duas abordagens diferentes para a execução concorrente de tarefas em um sistema computacional. A principal diferença entre eles é que os multiprocessos envolvem a criação de múltiplos processos independentes, enquanto os multithreads envolvem a criação de múltiplos threads dentro de um único processo.
+
+Em um sistema multithread, várias threads são criadas dentro de um único processo, compartilhando o mesmo espaço de endereçamento e dados. Cada thread executa uma tarefa específica, mas todas têm acesso aos mesmos recursos do processo. As threads podem ser gerenciadss pelo próprio programa, sem intervenção do sistema operacional. A comunicação entre as threads pode ser feita através de variáveis compartilhadas ou objetos de sincronização, como mutexes e semáforos.
+
+Em um sistema multiprocessado, vários processos são executados simultaneamente, cada um com sua própria cópia de dados e código. Cada processo é gerenciado pelo sistema operacional, que garante que cada um tenha acesso justo aos recursos do sistema, como CPU, memória e dispositivos de entrada/saída. A comunicação entre processos pode ser feita através de mecanismos definidos pelo sistema operacional, como pipes, sockets, sinais ou memória compartilhada.
+
+A escolha entre a abordagem multiprocessos e multithreads depende das necessidades do aplicativo em questão. Em geral, os multiprocessos são mais seguros e estáveis, pois um processo não afeta o estado de outros processos, enquanto os multithreads podem ser mais eficientes e escaláveis, pois não há o custo de criar e gerenciar processos adicionais.
+
+### Multiplexação (conteúdo além do que precisamos para esse projeto)
+
+>Multiplexação é uma técnica que permite que múltiplos sinais ou fluxos de dados sejam transmitidos através de um único canal de comunicação, maximizando o uso do canal e economizando recursos de rede.
+>Existem vários tipos de multiplexação, incluindo a multiplexação por divisão de tempo (TDM), multiplexação por divisão de frequência (FDM), multiplexação por divisão de comprimento de onda (WDM) e a multiplexação por divisão de código (CDM). Cada técnica de multiplexação tem suas próprias vantagens e desvantagens e é mais adequada para diferentes aplicações e cenários.
+
+### Data-racing (problema que deve ser evitado)
+
+Data racing (ou race condition) é um problema que pode ocorrer quando duas ou mais threads ou processos acessam uma mesma variável compartilhada ou recurso de forma concorrente e sem a devida sincronização. Quando isso acontece, o resultado final da operação pode ser inconsistente ou imprevisível, já que a ordem de execução das operações não é garantida.
+
+Para evitar data racing em threads e processos, é necessário garantir que as operações concorrentes sejam executadas de forma ordenada e segura. Isso pode ser feito através do uso de mecanismos de sincronização, como mutexes, semáforos, monitores, entre outros. Além disso, é importante garantir que as operações em recursos compartilhados sejam atômicas, ou seja, que não possam ser interrompidas ou executadas de forma parcial por outras threads ou processos.
+
+### Mutex
+
+
+### Semáforos
+
+
+#### Referências:
+
+https://embarcados.com.br/fork-exec-e-daemon/
+https://www.youtube.com/watch?v=G0ZCndqb0xk
+https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/

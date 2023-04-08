@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:17:49 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/05 14:10:32 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/06 13:34:51 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	philo_life()
 	}
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv) //nb_filo - t_morte - t_comer - t_dormir - qts_refei(opcional)
 {
 	
+	return (0);
 }
