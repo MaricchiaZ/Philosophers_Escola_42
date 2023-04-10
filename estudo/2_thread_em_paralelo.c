@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   2_thread_em_paralelo.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 13:37:43 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/08 10:14:11 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/09 11:07:14 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,25 @@
 
 void    *routine() 
 {
-    prinf("Test from threads\n")
+    printf("Test from threads\n");
+    sleep(3);
+    printf("Ending thread\n");
 }
+
+// em vez de uma executar, e a outra executar, as duas estão sendo executadas ao mesmo tempo, e o log delas sai misturado
 
 int main(int argc, char **argv)
 {
     pthread_t t1; // variável que vai receber o API e informações sobre a thread
+    pthread_t t2;
 
     pthread_create(&t1, NULL, &routine, NULL); // &t1 - thread que será criada/inicializada, NULL - configurações adicionais, se for null criará no modo padrão, &routine a função que vai rodar qnd a thread for criada, NULL o que fazer após criar a thread.
+    pthread_create(&t2, NULL, &routine, NULL);
+    pthread_join(t1, NULL); // funciona como o wait, mas para threads // espera o encademaento específico de thread terminar.
+    pthread_join(t2, NULL);
     return (0);
 }
+
+/*
+gcc -pthread main.c
+*/
