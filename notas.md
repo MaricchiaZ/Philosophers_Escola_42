@@ -63,7 +63,7 @@ número_de_filósofos tempo_até_morrer_de fome tempo_da_refeição tempo_de_dor
 ◦ tempo_até_morrer_de fome (em milisegundos): Se um filósofo não começar a comer tempo_até_morrer_de fome desde o início da sua última refeição ou do início da simulação, ele morre.
 ◦ tempo_da_refeição (em milissegundos): O tempo que um filósofo demora a comer. Durante esse tempo, eles terão de segurar dois garfos.
 ◦ time_to_sleep (em milissegundos): O tempo que um filósofo vai passar a dormir.
-◦ número_de_refeições_por_filo (argumento opcional): Se todos os filósofos comeram pelo menos o úmero_de_refeições_por_filo vezes, a simulação pára. E se não for especificada, a simulação pára quando um
+◦ número_de_refeições_por_filo (argumento opcional): Se todos os filósofos comeram pelo menos o número_de_refeições_por_filo vezes, a simulação pára. E se não for especificada, a simulação pára quando um
 morre o filósofo.
 - Cada filósofo tem um número que varia de 1 ao número_de_filósofos.
 - É uma mesa circular filósofo número 1 senta-se, e ao lado dele senta-se o 2... assim vai até que o último filósofo senta-se ao lado do filo1.

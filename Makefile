@@ -6,11 +6,15 @@ CFLAGS		= -g -pthread -Wall -Wextra -Werror $(INCLUDE)
 
 RM	= rm -rf
 
-PATH_SRCS	= ./src/
+PATH_SRC	= ./src/
 PATH_OBJS	= ./objs/
 
-SRCS	= $(PATH_SRCS)main.c \
-		#$(PATH_MAIN)main.c \
+SRCS	= $(PATH_SRC)main.c \
+		$(PATH_SRC)check_args.c \
+		$(PATH_SRC)init_free.c \
+		$(PATH_SRC)life_philos.c \
+		$(PATH_SRC)to_sleep.c \
+		$(PATH_SRC)utils.c \
 
 OBJS	= $(patsubst $(PATH_SRCS)%.c, $(PATH_OBJS)%.o, $(SRCS))
 
@@ -24,15 +28,11 @@ $(PATH_OBJS)%.o:	$(PATH_SRCS)%.c
 		@mkdir -p $(PATH_OBJS)src/
 		$(CC) $(CFLAGS) -c $< -o $@
 
-$(LIBFT):     
-	make -C ./libft
-
 clean:
 	$(RM) ./objs
 
 fclean: clean
 	$(RM) $(NAME)
-	make fclean -C ./libft
 
 re:	fclean all
 
