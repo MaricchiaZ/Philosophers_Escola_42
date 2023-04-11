@@ -1,5 +1,7 @@
 ## O Jantar dos Filósofos
 
+![Jantar](./img/philo.PNG)
+
 ### O Problema
 
 Aqui estão as coisas que precisa de saber se quiser ter sucesso nesta tarefa:
@@ -56,9 +58,9 @@ Um semáforo binário, ou princípio de exculsão mútua, é um MUTEX, podendo a
 
 ### Exigências
 - O(s) seu(s) programa(s) deverá(ão) aceitar os seguintes argumentos:
-número_de_filósofos tempo_até_morrer_de_fome tempo_da_refeição tempo_de_dormir e (número_de_refeições_por_filo - ARG OPICIONAL)
+número_de_filósofos tempo_até_morrer_de fome tempo_da_refeição tempo_de_dormir e (número_de_refeições_por_filo - ARG OPICIONAL)
 ◦ O número de filósofos e também o número de garfos.
-◦ tempo_até_morrer_de fome (em milisegundos): Se um filósofo não começar a comer tempo_até_morrer_de_fome desde o início da sua última refeição ou do início da simulação, ele morre.
+◦ tempo_até_morrer_de fome (em milisegundos): Se um filósofo não começar a comer tempo_até_morrer_de fome desde o início da sua última refeição ou do início da simulação, ele morre.
 ◦ tempo_da_refeição (em milissegundos): O tempo que um filósofo demora a comer. Durante esse tempo, eles terão de segurar dois garfos.
 ◦ time_to_sleep (em milissegundos): O tempo que um filósofo vai passar a dormir.
 ◦ número_de_refeições_por_filo (argumento opcional): Se todos os filósofos comeram pelo menos o úmero_de_refeições_por_filo vezes, a simulação pára. E se não for especificada, a simulação pára quando um
@@ -121,11 +123,23 @@ Data racing (ou race condition) é um problema que pode ocorrer quando duas ou m
 
 Para evitar data racing em threads e processos, é necessário garantir que as operações concorrentes sejam executadas de forma ordenada e segura. Isso pode ser feito através do uso de mecanismos de sincronização, como mutexes, semáforos, monitores, entre outros. Além disso, é importante garantir que as operações em recursos compartilhados sejam atômicas, ou seja, que não possam ser interrompidas ou executadas de forma parcial por outras threads ou processos.
 
-### Mutex
-
 
 ### Semáforos
 
+Semáforos são um mecanismo de sincronização comumente usado em programação concorrente e multithreaded para controlar o acesso a recursos compartilhados.
+Um semáforo é um objeto que possui um valor inteiro não negativo (chamado de contador de semáforo) e duas operações principais: wait (ou down) e signal (ou up). Quando uma thread ou processo deseja acessar um recurso compartilhado, ela primeiro deve chamar a operação wait no semáforo. Se o valor do contador de semáforo for maior que zero, o semáforo é decrementado e a thread ou processo continua sua execução. Se o valor do contador for zero, a thread ou processo é bloqueado até que outro processo chame a operação signal no semáforo, incrementando o contador e permitindo que a thread ou processo bloqueado continue. 
+
+A operação signal no semáforo é usada para sinalizar que um recurso compartilhado está disponível para ser usado. Quando um processo ou thread libera o recurso, ele chama a operação signal no semáforo correspondente, incrementando o contador de semáforo e permitindo que outros processos ou threads que estejam esperando tenham acesso ao recurso.
+
+Semáforos são úteis para evitar condições de corrida (race conditions), garantindo que apenas um processo ou thread tenha acesso a um recurso compartilhado em um determinado momento. Além disso, eles podem ser usados para sincronizar threads e processos, garantindo que certas operações sejam realizadas em uma ordem específica.
+
+### Mutex
+
+O mutex é um tipo específico de semáforo, utilizado para garantir exclusão mútua (mutual exclusion) em regiões críticas de um programa. Enquanto os semáforos podem ser usados para controlar o acesso a recursos compartilhados entre vários processos ou threads, os mutexes são utilizados para sincronizar o acesso a recursos compartilhados dentro de um mesmo processo ou thread.
+
+O mutex é um semáforo binário, ou seja, ele pode ter apenas dois valores possíveis: bloqueado (ou ocupado) e desbloqueado (ou livre). Quando um processo ou thread deseja acessar uma região crítica do código, ela deve primeiro adquirir o mutex associado a esse recurso. Se o mutex estiver disponível, a thread pode adquiri-lo e acessar o recurso compartilhado. Se o mutex já estiver em uso por outro thread, o thread atual será bloqueado até que o mutex esteja disponível novamente. E enquanto uam thread possui o mutex, nenhuma outra thread pode adquiri-lo, garantindo assim que o recurso compartilhado esteja sendo acessado por apenas uma thread por vez. Quando a thread atual terminar de usar o recurso compartilhado, ela deve liberar o mutex usando a função correspondente.
+
+Os mutexes são importantes para evitar condições de corrida (Data racing) e inconsistências de dados em programas multithread. Eles também são usados em sistemas operacionais para controlar o acesso a recursos de hardware compartilhados, como impressoras e dispositivos de armazenamento.
 
 #### Referências:
 
