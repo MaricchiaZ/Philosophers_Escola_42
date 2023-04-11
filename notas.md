@@ -56,9 +56,9 @@ Um semáforo binário, ou princípio de exculsão mútua, é um MUTEX, podendo a
 
 ### Exigências
 - O(s) seu(s) programa(s) deverá(ão) aceitar os seguintes argumentos:
-número_de_filósofos tempo_até_morrer_de fome tempo_da_refeição tempo_de_dormir e (número_de_refeições_por_filo - ARG OPICIONAL)
+número_de_filósofos tempo_até_morrer_de_fome tempo_da_refeição tempo_de_dormir e (número_de_refeições_por_filo - ARG OPICIONAL)
 ◦ O número de filósofos e também o número de garfos.
-◦ tempo_até_morrer_de fome (em milisegundos): Se um filósofo não começar a comer tempo_até_morrer_de fome desde o início da sua última refeição ou do início da simulação, ele morre.
+◦ tempo_até_morrer_de fome (em milisegundos): Se um filósofo não começar a comer tempo_até_morrer_de_fome desde o início da sua última refeição ou do início da simulação, ele morre.
 ◦ tempo_da_refeição (em milissegundos): O tempo que um filósofo demora a comer. Durante esse tempo, eles terão de segurar dois garfos.
 ◦ time_to_sleep (em milissegundos): O tempo que um filósofo vai passar a dormir.
 ◦ número_de_refeições_por_filo (argumento opcional): Se todos os filósofos comeram pelo menos o úmero_de_refeições_por_filo vezes, a simulação pára. E se não for especificada, a simulação pára quando um
