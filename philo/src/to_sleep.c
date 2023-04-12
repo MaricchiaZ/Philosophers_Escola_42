@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 19:32:59 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/11 20:55:29 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/12 16:36:32 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	to_sleep(time_t microsec, t_pd  *pdinner) //
 	while (get_time() - init < microsec) //enquanto n atingir os microseg
 	{
 		pthread_mutex_lock(&pdinner->msg); // travamos o uso das mensagens
-		if (pdinner->stop == true) // se tiver um aviso pra parar
+		if (pdinner->stop == TRUE) // se tiver um aviso pra parar
 		{
 			pthread_mutex_unlock(&pdinner->msg); // destravamos o uso das mensagens IIISIISIISISISISISIOIO
 			break ; // saímos do while

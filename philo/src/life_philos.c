@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:46:12 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/11 20:55:19 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/12 16:37:30 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	*routine(void *arg)
 	philo = arg;
 	if (philo->id %2L == 0)
 		to_sleep(philo->pdinner->time_eating / 2L, philo->pdinner);
-	while (philo->stop == false)
+	while (philo->stop == FALSE)
 	{
 		pthread_mutex_lock(philo->r_fork);
 		philo->stop = life(philo, TAKEN_FORK);
@@ -76,11 +76,11 @@ int check_limit_meals(t_pd *pdinner)
 	while (i < pdinner->nbr_philo)
 	{
 		if (pdinner->philo[i].nbr_meals < pdinner->nbr_meals)
-			return (false);
+			return (FALSE);
 		i++;
 	}
-	pdinner->stop = true;
-	return (true);
+	pdinner->stop = TRUE;
+	return (TRUE);
 }
 
 void	verify_death(t_pd *pdinner) // verifica se tds os filósofos estão vindo
@@ -98,13 +98,13 @@ void	verify_death(t_pd *pdinner) // verifica se tds os filósofos estão vindo
 			if (time - pdinner->philo[i].last_meal >= pdinner->time_to_starv) // vemos se o tempo transcorrido desde a última refeição é maior ou igual ao tempo pro filo morrer de inanição
 			{
 				print_events(&pdinner->philo[i], "died"); //printamos a morte do filo
-				pdinner->stop = true; // vamos parar o programa
+				pdinner->stop = TRUE; // vamos parar o programa
 				break; // saímos do while
 			}
 			i++; // vamos pro próximo filósofo
 		}
 		pthread_mutex_unlock(&pdinner->msg); // destravamos o uso das mensagens
-		if (pdinner->stop == true) // se temos o aviso pra parar...
+		if (pdinner->stop == TRUE) // se temos o aviso pra parar...
 			return ; // retornamos
 	}
 }
@@ -122,7 +122,7 @@ int	philos_threads_born(t_pd *pdinner)
 		{
 			ft_putstr_fd("Pthread_create error\n", 2);
 			pthread_mutex_lock(&pdinner->msg);
-			pdinner->stop = true;
+			pdinner->stop = TRUE;
 			pthread_mutex_unlock(&pdinner->msg);
 			return (0);
 		}

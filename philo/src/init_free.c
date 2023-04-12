@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:36:05 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/11 20:55:13 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/12 16:44:49 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	init_philo(t_pd	*pdinner) // inicializaremos os valores de cada filósofo
 	i = 0;
 	while (i < pdinner->nbr_philo) // enquanto não inicializar todos os filósofos
 	{
+		pdinner->philo[i].stop = FALSE;
+		pdinner->philo[i].nbr_meals = 0;
 		pdinner->philo[i].id = i + 1; // o id do filo é por ordem de chegada "de criação"
 		pdinner->philo[i].pdinner = pdinner; // todos apontam pra mesa de jantar
 		pdinner->philo[i].r_fork = &pdinner->fork[i]; // o garfo da mão direita eles trouxeram de casa
@@ -32,6 +34,8 @@ void	init_philo(t_pd	*pdinner) // inicializaremos os valores de cada filósofo
 
 int	init_struct(t_pd *pdinner, char **argv) // vamos iniciar a struct e salvar os args nas variáveis
 {
+	pdinner->stop = 0;
+	pdinner->nbr_meals = 0;
 	pdinner->nbr_philo = ft_atoi(argv[1]); // convertemos o argv em número e salvamos na variável correspondente
 	pdinner->time_to_starv = ft_atoi(argv[2]); // salvamos o argv virado int na variável correspondente
 	pdinner->time_eating = ft_atoi(argv[3]); // salvamos o argv virado int na variável correspondente

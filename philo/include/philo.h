@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:16:46 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/11 20:55:01 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/12 16:33:40 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@
 # include <limits.h>
 # include <semaphore.h>
 # include <pthread.h>
-# include <stdbool.h>
 # include <sys/time.h>
 
 # define STOP		1
 # define CONTINUE	0
+# define FALSE		0
+# define TRUE		1
 # define EATING		11
 # define THINKING	12
 # define SLEEPING	13
@@ -39,8 +40,8 @@ typedef struct  s_philo
 	pthread_mutex_t	*r_fork;
 	time_t			last_meal;
 	size_t			nbr_meals;
-	bool			stop;
-	t_pd		*pdinner;
+	int				stop;
+	t_pd			*pdinner;
 }   t_philo;
 
 typedef struct s_philo_dinner
@@ -54,7 +55,7 @@ typedef struct s_philo_dinner
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	msg;
 	time_t			init;
-	bool			stop;
+	int				stop;
 }   s_pd;
 
 // check_args.c
