@@ -1,4 +1,4 @@
-NAME	= philosophers
+NAME	= philo_bonus
 
 CC	= cc
 INCLUDE		= -I ./include
@@ -11,10 +11,6 @@ PATH_OBJS	= ./objs/
 
 SRCS	= $(PATH_SRC)main.c \
 		$(PATH_SRC)check_args.c \
-		$(PATH_SRC)init_free.c \
-		$(PATH_SRC)life_philos.c \
-		$(PATH_SRC)to_sleep.c \
-		$(PATH_SRC)utils.c \
 
 OBJS	= $(patsubst $(PATH_SRCS)%.c, $(PATH_OBJS)%.o, $(SRCS))
 
