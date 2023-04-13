@@ -11,6 +11,7 @@ PATH_OBJS	= ./objs/
 
 SRCS	= $(PATH_SRC)main.c \
 		$(PATH_SRC)check_args.c \
+		$(PATH_SRC)utils.c \
 
 OBJS	= $(patsubst $(PATH_SRCS)%.c, $(PATH_OBJS)%.o, $(SRCS))
 
