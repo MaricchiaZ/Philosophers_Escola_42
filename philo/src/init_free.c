@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:36:05 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 15:00:10 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 17:37:33 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	init_struct(t_pd *pdinner, char **argv) // vamos iniciar a struct e salvar o
 		free(pdinner->philo);
 		free(pdinner->fork); // limpamos a allocação 
 		ft_putstr_fd("Malloc error...\n", 2); // avisamos o erro de malloc
+		free(pdinner);
 		return (0); // retornamos erro (0 = false)
 	}
 	return (1); // se der td certo, retornamos 1
@@ -72,6 +73,7 @@ int	init_mutex(t_pd *pdinner) // vamos iniciar as mutex
 		ft_putstr_fd("Pthread error...\n", 2);
 		free(pdinner->philo);
 		free(pdinner->fork);
+		free(pdinner);
 		return (0); // retornamos avisando o erro
 	}
 	return (1); // retornamos avisando que está tudo ok

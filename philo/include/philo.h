@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:16:46 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 15:27:12 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 15:35:31 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@
 # define CONTINUE	0
 # define FALSE		0
 # define TRUE		1
-# define EATING		11
-# define THINKING	12
-# define SLEEPING	13
-# define TAKEN_FORK	14
+# define EATING		"is eating"
+# define THINKING	"is thinking"
+# define SLEEPING	"is sleeping"
+# define TAKEN_FORK	"has taken a fork"
 
 typedef struct s_philo_dinner   t_pd;
 
@@ -69,7 +69,7 @@ int		init_mutex(t_pd *pdinner);
 void	free_struct(t_pd *pdinner);
 
 // life_philos.c
-int		life(t_philo *philo, int event);
+int		life(t_philo *philo, char *event);
 void	*routine(void *arg);
 int 	check_limit_meals(t_pd *pdinner);
 void	verify_death(t_pd *pdinner);
@@ -88,5 +88,8 @@ int		ft_str_isdigit(char *str);
 int		chek_str_int_positive(const char *nptr);
 int		ft_atoi(const char *nptr);
 void	*ft_calloc(size_t nmemb, size_t size);
+
+// utils2.c
+int		ft_strcmp(char *s1, char *s2);
 
 #endif

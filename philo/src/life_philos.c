@@ -6,13 +6,13 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:46:12 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 15:26:07 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 17:31:50 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	life(t_philo *philo, int event)
+int	life(t_philo *philo, char *event)
 {
 	pthread_mutex_lock(&philo->pdinner->mstop);
 	if (philo->pdinner->stop)
@@ -21,21 +21,17 @@ int	life(t_philo *philo, int event)
 		return (STOP);
 	}
 	pthread_mutex_unlock(&philo->pdinner->mstop);
-	if (event == EATING)
-	{
-		print_events(philo, "is eating");
-		philo->last_meal = get_time();
-		philo->nbr_meals++; // nao deveria estar em pensando???????????????????????????????
-		if (philo->nbr_meals == philo->pdinner->nbr_meals)
-			check_limit_meals(philo->pdinner);
-	}
-	else if (event == THINKING)
-		print_events(philo, "is thinking");
-	else if (event == SLEEPING)
-		print_events(philo, "is sleeping");
-	else if (event == TAKEN_FORK)
-		print_events(philo, "has taken a fork");
-	return (CONTINUE);
+    if (!ft_strcmp(event, EATING))
+    {
+        print_events(philo, EATING);
+        philo->last_meal = get_time();
+        philo->nbr_meals++;
+        if (philo->nbr_meals == philo->pdinner->nbr_meals)
+            check_limit_meals(philo->pdinner);
+    }
+	else
+    	print_events(philo, event);
+    return (CONTINUE);
 }
 
 void	*routine(void *arg)
