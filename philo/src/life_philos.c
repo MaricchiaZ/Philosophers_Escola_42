@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:46:12 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 17:56:31 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 18:08:25 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	*routine(void *arg)
 
 int check_limit_meals(t_pd *pdinner)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	while (i < pdinner->nbr_philo)
@@ -77,7 +77,7 @@ int check_limit_meals(t_pd *pdinner)
 
 void	verify_death(t_pd *pdinner) // verifica se tds os filósofos estão vindo
 {
-	size_t	i; // contador pra percorrer os filos
+	int	i; // contador pra percorrer os filos
 	time_t	time; // tempo atual
 
 	while (1) // ciclo eterno
@@ -103,7 +103,7 @@ void	verify_death(t_pd *pdinner) // verifica se tds os filósofos estão vindo
 
 int	philos_threads_born(t_pd *pdinner)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	pdinner->init = get_time(); // anotamos o horário que inciamos o programa

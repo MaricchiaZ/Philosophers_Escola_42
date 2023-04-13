@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:17:49 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 17:50:34 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 18:07:35 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	print_events(t_philo *philo, char *event)
 	
 	pthread_mutex_lock(&philo->pdinner->msg);
 	time = get_time() - philo->pdinner->init;
-	printf("%ld %ld %s\n", time, philo->id, event);
+	printf("%ld %d %s\n", time, philo->id, event);
 	pthread_mutex_unlock(&philo->pdinner->msg);
 }
 

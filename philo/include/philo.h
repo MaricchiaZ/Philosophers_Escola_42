@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:16:46 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 15:35:31 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 18:06:59 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ typedef struct s_philo_dinner   t_pd;
 
 typedef struct  s_philo
 {
-	size_t			id;
+	int				id;
 	pthread_t		thread;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
 	time_t			last_meal;
-	size_t			nbr_meals;
+	int				nbr_meals;
 	int				stop;
 	t_pd			*pdinner;
 }   t_philo;
@@ -47,11 +47,11 @@ typedef struct  s_philo
 typedef struct s_philo_dinner
 {
 	t_philo			*philo;
-	size_t			nbr_philo;
+	int				nbr_philo;
 	time_t			time_to_starv;
 	time_t			time_eating;
 	time_t			time_sleeping;
-	size_t			nbr_meals;
+	int				nbr_meals;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	msg;
 	pthread_mutex_t	mstop;

@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:36:05 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 17:37:33 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 18:07:59 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	init_philo(t_pd	*pdinner) // inicializaremos os valores de cada filósofo
 {
-	size_t	i;
+	int	i;
 	
 	i = 0;
 	while (i < pdinner->nbr_philo) // enquanto não inicializar todos os filósofos
@@ -81,7 +81,7 @@ int	init_mutex(t_pd *pdinner) // vamos iniciar as mutex
 
 void	free_struct(t_pd *pdinner)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	while (i < pdinner->nbr_philo) // enquanto i < número de filos
