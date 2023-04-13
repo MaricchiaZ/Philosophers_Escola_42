@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:46:12 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 17:31:50 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 17:56:31 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ void	*routine(void *arg)
 	{
 		pthread_mutex_lock(philo->r_fork);
 		philo->stop = life(philo, TAKEN_FORK);
-		if (philo->r_fork == philo->l_fork)
-			break;
 		pthread_mutex_lock(philo->l_fork);
 		philo->stop = life(philo, TAKEN_FORK);
 		philo->stop = life(philo, EATING);
