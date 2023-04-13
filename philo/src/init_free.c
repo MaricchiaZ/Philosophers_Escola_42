@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:36:05 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/12 16:44:49 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 15:00:10 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	init_mutex(t_pd *pdinner) // vamos iniciar as mutex
 			break; // se a func pthread_mutex_init() voltar 1 é pq temos um erro// aí paramos esse while
 		i++;
 	}
-	if (i-- != (int)pdinner->nbr_philo || pthread_mutex_init(&pdinner->msg, NULL)) 
+	if (i-- != (int)pdinner->nbr_philo || pthread_mutex_init(&pdinner->msg, NULL) || pthread_mutex_init(&pdinner->mstop, NULL)) 
 	{
 		while (i >= 0)
 			pthread_mutex_destroy(&pdinner->fork[i--]);
@@ -98,6 +98,8 @@ void	free_struct(t_pd *pdinner)
 	}
 	free(pdinner->fork);
 	if (pthread_mutex_destroy(&pdinner->msg)) //se tiver erro na função de destroi e desaloca o mutex da func de notificar as ações dos filósofos
+		ft_putstr_fd("Pthread_join error...\n", 2); // avisamos o erro
+	if (pthread_mutex_destroy(&pdinner->mstop)) //se tiver erro na função de destroi e desaloca o mutex da func de notificar as ações dos filósofos
 		ft_putstr_fd("Pthread_join error...\n", 2); // avisamos o erro
 	free(pdinner);
 }

@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:46:12 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/12 16:37:30 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 15:26:07 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,27 @@
 
 int	life(t_philo *philo, int event)
 {
-	pthread_mutex_lock(&philo->pdinner->msg);
+	pthread_mutex_lock(&philo->pdinner->mstop);
 	if (philo->pdinner->stop)
 	{
-		pthread_mutex_unlock(&philo->pdinner->msg);
+		pthread_mutex_unlock(&philo->pdinner->mstop);
 		return (STOP);
 	}
+	pthread_mutex_unlock(&philo->pdinner->mstop);
 	if (event == EATING)
 	{
 		print_events(philo, "is eating");
 		philo->last_meal = get_time();
-	}
-	else if (event == THINKING)
-		print_events(philo, "is thinking");
-	else if (event == SLEEPING)
-	{
-		print_events(philo, "is sleeping");
 		philo->nbr_meals++; // nao deveria estar em pensando???????????????????????????????
 		if (philo->nbr_meals == philo->pdinner->nbr_meals)
 			check_limit_meals(philo->pdinner);
 	}
+	else if (event == THINKING)
+		print_events(philo, "is thinking");
+	else if (event == SLEEPING)
+		print_events(philo, "is sleeping");
 	else if (event == TAKEN_FORK)
 		print_events(philo, "has taken a fork");
-	pthread_mutex_unlock(&philo->pdinner->msg);
 	return (CONTINUE);
 }
 
@@ -45,8 +43,8 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = arg;
-	if (philo->id %2L == 0)
-		to_sleep(philo->pdinner->time_eating / 2L, philo->pdinner);
+	if (philo->id %2 == 0)
+		to_sleep(philo->pdinner->time_eating / 2, philo->pdinner);
 	while (philo->stop == FALSE)
 	{
 		pthread_mutex_lock(philo->r_fork);
@@ -91,19 +89,19 @@ void	verify_death(t_pd *pdinner) // verifica se tds os filósofos estão vindo
 	while (1) // ciclo eterno
 	{
 		i = 0; //
-		pthread_mutex_lock(&pdinner->msg); // travamos o uso das mensagens
 		time = get_time(); // conferimos o tempo de agora
 		while (i < pdinner->nbr_philo) // enquanto nao passarmos por todos os filos
 		{
 			if (time - pdinner->philo[i].last_meal >= pdinner->time_to_starv) // vemos se o tempo transcorrido desde a última refeição é maior ou igual ao tempo pro filo morrer de inanição
 			{
+				pthread_mutex_lock(&pdinner->mstop);
 				print_events(&pdinner->philo[i], "died"); //printamos a morte do filo
 				pdinner->stop = TRUE; // vamos parar o programa
+				pthread_mutex_unlock(&pdinner->mstop);
 				break; // saímos do while
 			}
 			i++; // vamos pro próximo filósofo
 		}
-		pthread_mutex_unlock(&pdinner->msg); // destravamos o uso das mensagens
 		if (pdinner->stop == TRUE) // se temos o aviso pra parar...
 			return ; // retornamos
 	}
@@ -121,9 +119,9 @@ int	philos_threads_born(t_pd *pdinner)
 		if (pthread_create(&pdinner->philo[i].thread, NULL, &routine, &pdinner->philo[i]))
 		{
 			ft_putstr_fd("Pthread_create error\n", 2);
-			pthread_mutex_lock(&pdinner->msg);
+			pthread_mutex_lock(&pdinner->mstop);
 			pdinner->stop = TRUE;
-			pthread_mutex_unlock(&pdinner->msg);
+			pthread_mutex_unlock(&pdinner->mstop);
 			return (0);
 		}
 		i++;

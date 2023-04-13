@@ -15,6 +15,7 @@ SRCS	= $(PATH_SRC)main.c \
 		$(PATH_SRC)life_philos.c \
 		$(PATH_SRC)to_sleep.c \
 		$(PATH_SRC)utils.c \
+		$(PATH_SRC)utils2.c \
 
 OBJS	= $(patsubst $(PATH_SRCS)%.c, $(PATH_OBJS)%.o, $(SRCS))
 

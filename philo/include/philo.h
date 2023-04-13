@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:16:46 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/12 16:33:40 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/13 15:27:12 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ typedef struct  s_philo
 {
 	size_t			id;
 	pthread_t		thread;
-	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*l_fork;
 	time_t			last_meal;
 	size_t			nbr_meals;
 	int				stop;
@@ -54,6 +54,7 @@ typedef struct s_philo_dinner
 	size_t			nbr_meals;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	msg;
+	pthread_mutex_t	mstop;
 	time_t			init;
 	int				stop;
 }   s_pd;
