@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:29:41 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/14 14:06:40 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/14 15:36:52 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	life(t_pd *pdinner, char *event)
 {
+	sem_wait(pdinner->msg);
 	sem_wait(pdinner->philo.r_fork);
-	sem_wait(pdinner->msg); 
 	if (!ft_strcmp(event, EATING))
 	{
 		print_event(pdinner, &pdinner->philo, EATING);
@@ -26,8 +26,8 @@ void	life(t_pd *pdinner, char *event)
 	}
 	else
 		print_event(pdinner, &pdinner->philo, event);
-	sem_post(pdinner->msg);
 	sem_post(pdinner->philo.r_fork);
+	sem_post(pdinner->msg);
 }
 
 void	to_sleep(time_t microsec, t_pd  *pdinner) //
@@ -46,10 +46,12 @@ void	to_sleep(time_t microsec, t_pd  *pdinner) //
 
 void	*routine(t_pd *pdinner)
 {
+	int i = 0;
 	if (pdinner->philo.id > pdinner->nbr_philo / 2)
 		to_sleep(pdinner->time_eating / 2, pdinner);
 	while (1)
 	{
+		printf("routine| i: %d\n", i);
 		sem_wait(pdinner->fork);
 		life(pdinner, TAKEN_FORK);
 		sem_wait(pdinner->fork);
@@ -57,10 +59,11 @@ void	*routine(t_pd *pdinner)
 		life(pdinner, EATING);
 		to_sleep(pdinner->time_eating, pdinner);
 		life(pdinner, SLEEPING);
-		sem_wait(pdinner->fork); // SUBIR ESSAS DUAS
-		sem_wait(pdinner->fork);
+		sem_post(pdinner->fork); // SUBIR ESSAS DUAS
+		sem_post(pdinner->fork);
 		to_sleep(pdinner->time_sleeping, pdinner);
 		life(pdinner, THINKING);
+		i++;
 	}
 	return (NULL);
 }
