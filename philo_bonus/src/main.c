@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:59:51 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/16 12:37:30 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 10:13:43 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,11 @@ int	main(int argc, char **argv)
 		return (only_one(argv), 0);
 	pdinner = (t_pd *) ft_calloc(1, sizeof(t_pd));
 	init_struct(pdinner, argv);
-	init_philos(pdinner);
-	init_thread(pdinner);
-	kill_philo(pdinner);
+	init_philo_and_sem(pdinner);
+	create_philo_process(pdinner);
+	sem_close(pdinner->msg);
+	sem_close(pdinner->fork);
 	free_struct(pdinner);
-	free (pdinner);
+	free(pdinner);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:00:56 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/16 12:36:25 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 09:05:41 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <stdlib.h>
+# include <semaphore.h>
+# include <fcntl.h>
+# include <wait.h>
 
 # define STOP		1
 # define CONTINUE	0
@@ -31,6 +34,7 @@
 # define DIED		"died"
 
 typedef struct s_philo_dinner	t_pd;
+typedef struct s_philo			t_philo;
 
 // o bônus estou fazendo com lista duplamente ligada circular
 typedef struct s_philo
@@ -38,8 +42,7 @@ typedef struct s_philo
 	int				id;
 	int				nbr_meals;
 	time_t			last_meal;
-	pthread_t		thread;
-	pthread_mutex_t	fork;
+	pid_t			pid;
 	t_philo			*next; // aponta pro next
 	t_philo			*prev; // aponta também pro philo anterior (por isso duplamente ligada)
 	t_pd			*pdinner; // todos philos apontam pro evento do jantar (circular)
@@ -47,41 +50,33 @@ typedef struct s_philo
 
 typedef struct s_philo_dinner
 {
-	t_philo			*philo;
-	time_t			init;
-	int				nbr_philo;
-	int				nbr_meals;
-	int				time_starv;
-	int				time_eating;
-	int				time_sleeping;
-	int				stop;
-	pthread_mutex_t	*fork;
-	pthread_mutex_t	*msg;
-	pthread_mutex_t	*stop_mutex;
-	pthread_mutex_t	*time_meal;
+	t_philo	*philo;
+	time_t	init;
+	int		nbr_philo;
+	int		nbr_meals;
+	int		time_starv;
+	int		time_eating;
+	int		time_sleeping;
+	int		stop;
+	sem_t	*fork;
+	sem_t	*msg;
 }	t_pd;
 
 // check_args
 int		check_args(int argc, char **argv);
 
 // init_free.c
+void	create_philo_process(t_pd *pdinner);
+void	init_philo_and_sem(t_pd *pdinner);
 void	init_struct(t_pd *pdinner, char **argv);
-
-void	*verify_death(void	*arg);
-void	create_sem_fork(t_pd *pdinner);
-int		init_semaphores(t_pd *pdinner);
 void	free_struct(t_pd *pdinner);
 
-// init_thread.c
-void	*alert_end_meals(void *arg);
-int		init_thread(t_pd *pdinner);
-
 // life.c
-void	life(t_pd *pdinner, char *event);
-void	to_sleep(time_t microsec, t_pd *pdinner);
-void	*routine(t_pd *pdinner);
-int		create_philo(t_pd *pdinner);
-void	kill_philo(t_pd *pdinner);
+void	fork_lock(t_philo *philo); // static
+void	eat(t_philo *philo);
+void	to_sleep(t_philo *philo);
+void	think(t_philo *philo);
+void	verify_death(int time, t_philo *philo);
 
 // main.c
 time_t	get_time(void);
@@ -95,9 +90,12 @@ int		chek_str_int_positive(const char *nptr);
 int		ft_atoi(const char *nptr);
 void	*ft_calloc(size_t nmemb, size_t size);
 
-// utils2.c
-char	*ft_strjoin(char *s1, char const *s2);
-char	*ft_itoa(int n);
-int		ft_strcmp(char *s1, char *s2);
+// // utils2.c
+// char	*ft_strjoin(char *s1, char const *s2);
+// char	*ft_itoa(int n);
+// int		ft_strcmp(char *s1, char *s2);
+
+// wait_process.c
+void	wait_process(t_pd *pdinner);
 
 #endif
