@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:59:51 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/17 10:13:43 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 12:51:58 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,11 @@ void	print_event(t_pd *pdinner, t_philo *philo, char *event)
 {
 	time_t	time;
 
+	sem_wait(pdinner->msg);
 	time = get_time() - pdinner->init;
-	printf("%ld %d %s\n", time, philo->id, event);
+	printf("%ld	%d %s\n", time, philo->id, event);
+	sem_post(pdinner->msg);
+	
 }
 
 void	only_one(char **argv)

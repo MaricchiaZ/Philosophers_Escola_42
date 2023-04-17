@@ -6,25 +6,11 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 11:09:40 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/17 10:51:56 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 11:36:18 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-
-void *teste(t_philo	*aux)
-{
-	aux->last_meal = get_time();
-	if (!(aux->id % 2))
-		verify_death(aux->pdinner->time_eating, aux);
-	while (1)
-	{
-		eat(aux);
-		to_sleep(aux);
-		think(aux);
-	}
-	exit(0);
-}
 
 void	create_philo_process(t_pd *pdinner)
 {
@@ -38,9 +24,7 @@ void	create_philo_process(t_pd *pdinner)
 	{
 		aux->pid = fork();
 		if (aux->pid == 0)
-		{
-			teste(aux);
-		}
+			life(aux);
 		aux = aux->next;
 		nbr_philo--;
 	}

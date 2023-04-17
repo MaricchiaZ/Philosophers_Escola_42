@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:00:56 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/17 09:05:41 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 11:37:24 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	init_struct(t_pd *pdinner, char **argv);
 void	free_struct(t_pd *pdinner);
 
 // life.c
-void	fork_lock(t_philo *philo); // static
+void	*life(t_philo *aux);
 void	eat(t_philo *philo);
 void	to_sleep(t_philo *philo);
 void	think(t_philo *philo);
