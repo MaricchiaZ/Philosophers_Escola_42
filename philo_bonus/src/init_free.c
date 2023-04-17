@@ -6,81 +6,75 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 11:09:40 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/14 15:43:48 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/16 13:59:33 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-// O filósofo adquire o garfo à esquerda para evitar que outro filósofo tente acessá-lo enquanto ele está morto.
-void	*verify_death(void	*arg)
+
+void	init_thread(t_pd *pdinner)
 {
-	t_pd	*pdinner;
-	
-	pdinner = arg;
-	printf("death| i: %d\n", 999);
-	while (1)
+	t_philo	*aux; // ponteiro auxuliar para percorrer os philos
+	int		i;
+
+	aux = pdinner->philo;
+	i = pdinner->nbr_philo;
+	pthread_mutex_init(&pdinner->fork, NULL);
+	pthread_mutex_init(&pdinner->msg, NULL);
+	pthread_mutex_init(&pdinner->stop_mutex, NULL);
+	pthread_mutex_init(&pdinner->time_meal, NULL);
+	pdinner->init = get_time;
+	while (i)
 	{
-		sem_wait(pdinner->philo.r_fork); // O filósofo adquire o garfo à direita para verificar se ele ainda está vivo - bloqueia o garfo (decrementando o valor do semáforo). 
-		if (get_time() - pdinner->philo.last_meal >= pdinner->time_starv) // Se o tempo atual menos o tempo da última refeição do filósofo for maior ou igual ao tempo máximo que um filósofo pode ficar sem comer (pdinner->time_starv), o filósofo é considerado morto.
-		{
-			sem_wait(pdinner->msg); //A mensagem é enviada para o semáforo "msg" informando que um filósofo morreu.
-			print_event(pdinner, &pdinner->philo, DIED); // avisamos a morte
-			sem_post(pdinner->stop); //A mensagem é enviada para o semáforo "stop" informando que um a simulação deve parar.
-			exit (0); // A simulação é encerrada e todos os processos filhos são finalizados chamando exit(0).
-		}
-		sem_post(pdinner->philo.r_fork); // desbloqueia o garfo (incrementando o valor do semáforo)
+		pthread_create(&aux->thread, NULL, &life, aux);
+		aux = aux->next;
+		i--;
 	}
-	return (NULL);
+	verify_death(pdinner);
+	i = pdinner->nbr_philo;
+	while (i)
+	{
+		pthread_join(aux->thread, NULL);
+		aux = aux->next;
+		i--;
+	}
 }
 
-void	create_sem_fork(t_pd *pdinner)
+static void	add_list(t_philo *philo, t_pd *pdinner, int i)
 {
-	char *sem_name;
-	
-	sem_name = ft_strjoin("id:", ft_itoa(pdinner->philo.id));
-	pdinner->philo.last_meal = pdinner->init;
+	t_philo	*next_philo; // ponteiro pro novo filo q vamos por na lista
+	t_philo	*prev_philo; // ponteiro pro novo anterior do que estamos pondo na lista
+
+	prev_philo = philo;
+	next_philo = (t_philo *) calloc (1, sizeof(t_philo));
+	pthread_mutex_init(&next_philo->fork, NULL);
+	next_philo->id = i + 1;
+	next_philo->nbr_meals = 0;
+	next_philo->pdinner = pdinner;
+	while (philo->next != philo->prev) // vamos avançar até o último philo da lista (ou já sentado na mesa)
+		philo = philo->next; //avançando
+	next_philo->next = next_philo;
+	next_philo->prev = prev_philo;
+	prev_filo->prev = next_philo;
+}
+
+void	init_philo(t_pd *pdinner)
+{
+	int i;
+
+	i = 0;
+	pdinner->philo = (t_philo* ) ft_calloc(1, sizeof(t_philo)); // alocamos a struct do philo
+	pthread_mutex_init(&pdinner->philo->fork, NULL); // e iniciamos ÚNICO garfo que ele tem como um mutex
+	pdinner->philo.id = 1;
 	pdinner->philo.nbr_meals = 0;
-	pdinner->philo.r_fork = sem_open(sem_name, O_CREAT | \
-	O_EXCL, 0644, pdinner->nbr_philo);
-	if (pdinner->philo.r_fork == SEM_FAILED)
-		ft_putstr_fd("Sem_open error...\n", 2);
-	sem_unlink(sem_name);
-	free(sem_name);
-	sem_unlink("fork");
-	sem_unlink("msg");
-	sem_unlink("stop");
-	sem_unlink("nbr_meals");
-	if (pthread_create(&pdinner->philo.checker, NULL, &verify_death, pdinner))
-	{
-		ft_putstr_fd("Pthread_create error...\n", 2);
-		sem_post(pdinner->stop);
-	}
-	pthread_detach(pdinner->philo.checker);
+	pdinner->philo.next = NULL;
+	pdinner->philo.prev = NULL;
+	pdinner->philo.pdinner = pdinner;
+	while(i < pdinner->nbr_philo - 1)
+		add_list(pdinner->philo, pdinner, i + 1);
 }
 
-int	init_semaphores(t_pd *pdinner)
-{
-	void *fail;
-
-	fail = SEM_FAILED; // VER SE É ISSO Q ESTÀ ERRANDO TD
-	sem_unlink("fork");
-	pdinner->fork = sem_open("fork", O_CREAT \
-	| O_EXCL, 0664, pdinner->nbr_philo);
-	sem_unlink("msg");
-	pdinner->msg = sem_open("msg", O_CREAT | O_EXCL, 0664, 1);
-	sem_unlink("stop");
-	pdinner->stop = sem_open("stop", O_CREAT | O_EXCL, 0664, 0);
-	sem_unlink("check_meals");
-	if(pdinner->nbr_meals)
-		pdinner->check_meals = sem_open("check_meals", O_CREAT \
-		| O_EXCL, 0664, 0);
-	if ((pdinner->nbr_meals && pdinner->check_meals == SEM_FAILED) || \
-	pdinner->stop == SEM_FAILED || pdinner->fork == fail  || pdinner->msg == fail)
-		return (ft_putstr_fd("Sem_open error...\n", 2), 0);  // avisamos o erro de malloc
-	return (1);
-}
-
-int	init_struct(t_pd *pdinner, char **argv)
+void	init_struct(t_pd *pdinner, char **argv)
 {
 	pdinner->nbr_meals = 0;
 	pdinner->nbr_philo = ft_atoi(argv[1]);
@@ -90,30 +84,15 @@ int	init_struct(t_pd *pdinner, char **argv)
 	if (argv[5])
 		pdinner->nbr_meals = ft_atoi(argv[5]);
 	pdinner->pid = ft_calloc(pdinner->nbr_philo, sizeof(pid_t));
-	if (!pdinner->pid)
-	{
-		ft_putstr_fd("Malloc error...\n", 2); // avisamos o erro de malloc
-		free_struct(pdinner);
-		free(pdinner);
-		return (0);
-	}
-	if (!init_thread(pdinner) || !init_semaphores(pdinner))
-	{
-		free(pdinner);
-		return (0);
-	}
-	return (1);
 }
 
 void	free_struct(t_pd *pdinner)
 {
-	free(pdinner->pid);
-	if (sem_close(pdinner->msg))
-		ft_putstr_fd("sem_close() error...\n", 2);
-	if (sem_close(pdinner->fork))
-		ft_putstr_fd("sem_close() error...\n", 2);
-	if (sem_close(pdinner->stop))
-		ft_putstr_fd("sem_close() error...\n", 2);
-	if (pdinner->nbr_meals && sem_close(pdinner->check_meals))
-		ft_putstr_fd("sem_close() error...\n", 2);
+	while (pdinner->nbr_philo > 1)
+	{
+		pdinner->philo = pdinner->philo->next;
+		free (pdinner->philo->prev);
+		pdinner->nbr_philo--;
+	}
+	free (pdinner->philo);
 }

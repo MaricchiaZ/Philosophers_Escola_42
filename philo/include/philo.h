@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:16:46 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 18:06:59 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/14 17:00:45 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <limits.h>
 # include <semaphore.h>
 # include <pthread.h>
 # include <sys/time.h>
@@ -25,14 +24,15 @@
 # define CONTINUE	0
 # define FALSE		0
 # define TRUE		1
+# define INT_MAX	2147483647
 # define EATING		"is eating"
 # define THINKING	"is thinking"
 # define SLEEPING	"is sleeping"
 # define TAKEN_FORK	"has taken a fork"
 
-typedef struct s_philo_dinner   t_pd;
+typedef struct s_philo_dinner	t_pd;
 
-typedef struct  s_philo
+typedef struct s_philo
 {
 	int				id;
 	pthread_t		thread;
@@ -42,7 +42,7 @@ typedef struct  s_philo
 	int				nbr_meals;
 	int				stop;
 	t_pd			*pdinner;
-}   t_philo;
+}	t_philo;
 
 typedef struct s_philo_dinner
 {
@@ -57,7 +57,7 @@ typedef struct s_philo_dinner
 	pthread_mutex_t	mstop;
 	time_t			init;
 	int				stop;
-}   s_pd;
+}	t_pd;
 
 // check_args.c
 int		check_args(int argc, char **argv);
@@ -71,7 +71,7 @@ void	free_struct(t_pd *pdinner);
 // life_philos.c
 int		life(t_philo *philo, char *event);
 void	*routine(void *arg);
-int 	check_limit_meals(t_pd *pdinner);
+int		check_limit_meals(t_pd *pdinner);
 void	verify_death(t_pd *pdinner);
 int		philos_threads_born(t_pd *pdinner);
 
@@ -80,7 +80,7 @@ time_t	get_time(void);
 void	print_events(t_philo *philo, char *event);
 
 //	to_sleep.c
-void	to_sleep(time_t microsec, t_pd  *pdinner);
+void	to_sleep(time_t microsec, t_pd *pdinner);
 
 // utils.c
 void	ft_putstr_fd(char *s, int fd);

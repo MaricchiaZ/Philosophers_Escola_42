@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:46:12 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 18:08:25 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/14 17:07:03 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,17 @@ int	life(t_philo *philo, char *event)
 		return (STOP);
 	}
 	pthread_mutex_unlock(&philo->pdinner->mstop);
-    if (!ft_strcmp(event, EATING))
-    {
-        print_events(philo, EATING);
-        philo->last_meal = get_time();
-        philo->nbr_meals++;
-        if (philo->nbr_meals == philo->pdinner->nbr_meals)
-            check_limit_meals(philo->pdinner);
-    }
+	if (!ft_strcmp(event, EATING))
+	{
+		print_events(philo, EATING);
+		philo->last_meal = get_time();
+		philo->nbr_meals++;
+		if (philo->nbr_meals == philo->pdinner->nbr_meals)
+			check_limit_meals(philo->pdinner);
+	}
 	else
-    	print_events(philo, event);
-    return (CONTINUE);
+		print_events(philo, event);
+	return (CONTINUE);
 }
 
 void	*routine(void *arg)
@@ -39,7 +39,7 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = arg;
-	if (philo->id %2 == 0)
+	if (philo->id % 2 == 0)
 		to_sleep(philo->pdinner->time_eating / 2, philo->pdinner);
 	while (philo->stop == FALSE)
 	{
@@ -60,7 +60,7 @@ void	*routine(void *arg)
 	return (NULL);
 }
 
-int check_limit_meals(t_pd *pdinner)
+int	check_limit_meals(t_pd *pdinner)
 {
 	int	i;
 
@@ -75,29 +75,29 @@ int check_limit_meals(t_pd *pdinner)
 	return (TRUE);
 }
 
-void	verify_death(t_pd *pdinner) // verifica se tds os filósofos estão vindo
+void	verify_death(t_pd *pdinner)
 {
-	int	i; // contador pra percorrer os filos
-	time_t	time; // tempo atual
+	int		i;
+	time_t	time;
 
-	while (1) // ciclo eterno
+	while (1)
 	{
-		i = 0; //
-		time = get_time(); // conferimos o tempo de agora
-		while (i < pdinner->nbr_philo) // enquanto nao passarmos por todos os filos
+		i = 0;
+		time = get_time();
+		while (i < pdinner->nbr_philo)
 		{
-			if (time - pdinner->philo[i].last_meal >= pdinner->time_to_starv) // vemos se o tempo transcorrido desde a última refeição é maior ou igual ao tempo pro filo morrer de inanição
+			if (time - pdinner->philo[i].last_meal >= pdinner->time_to_starv)
 			{
 				pthread_mutex_lock(&pdinner->mstop);
-				print_events(&pdinner->philo[i], "died"); //printamos a morte do filo
-				pdinner->stop = TRUE; // vamos parar o programa
+				print_events(&pdinner->philo[i], "died");
+				pdinner->stop = TRUE;
 				pthread_mutex_unlock(&pdinner->mstop);
-				break; // saímos do while
+				break ;
 			}
-			i++; // vamos pro próximo filósofo
+			i++;
 		}
-		if (pdinner->stop == TRUE) // se temos o aviso pra parar...
-			return ; // retornamos
+		if (pdinner->stop == TRUE)
+			return ;
 	}
 }
 
@@ -106,11 +106,12 @@ int	philos_threads_born(t_pd *pdinner)
 	int	i;
 
 	i = 0;
-	pdinner->init = get_time(); // anotamos o horário que inciamos o programa
-	while (i < pdinner->nbr_philo) // enquanto n passarmos por todos os filósofos
+	pdinner->init = get_time();
+	while (i < pdinner->nbr_philo)
 	{
 		pdinner->philo[i].last_meal = pdinner->init;
-		if (pthread_create(&pdinner->philo[i].thread, NULL, &routine, &pdinner->philo[i]))
+		if (pthread_create(&pdinner->philo[i].thread, NULL, \
+		&routine, &pdinner->philo[i]))
 		{
 			ft_putstr_fd("Pthread_create error\n", 2);
 			pthread_mutex_lock(&pdinner->mstop);

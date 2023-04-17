@@ -6,67 +6,69 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:36:05 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 18:07:59 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/14 17:24:19 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	init_philo(t_pd	*pdinner) // inicializaremos os valores de cada filósofo
+void	init_philo(t_pd	*pdinner)
 {
 	int	i;
-	
+
 	i = 0;
-	while (i < pdinner->nbr_philo) // enquanto não inicializar todos os filósofos
+	while (i < pdinner->nbr_philo)
 	{
 		pdinner->philo[i].stop = FALSE;
 		pdinner->philo[i].nbr_meals = 0;
-		pdinner->philo[i].id = i + 1; // o id do filo é por ordem de chegada "de criação"
-		pdinner->philo[i].pdinner = pdinner; // todos apontam pra mesa de jantar
-		pdinner->philo[i].r_fork = &pdinner->fork[i]; // o garfo da mão direita eles trouxeram de casa
-		if (i == pdinner->nbr_philo - 1) // se chegamos no último philo
-			pdinner->philo[i].l_fork = &pdinner->fork[0]; // o garfo da esquerda é emprestado filo 1
-		else // senão
-			pdinner->philo[i].l_fork = &pdinner->fork[i + 1]; // o garfo da esquerda é emprestado do próximo filo (é o garfo direito q o próximo filo trouxe de casa)
+		pdinner->philo[i].id = i + 1;
+		pdinner->philo[i].pdinner = pdinner;
+		pdinner->philo[i].r_fork = &pdinner->fork[i];
+		if (i == pdinner->nbr_philo - 1)
+			pdinner->philo[i].l_fork = &pdinner->fork[0];
+		else
+			pdinner->philo[i].l_fork = &pdinner->fork[i + 1];
 		i++;
 	}
 }
 
-int	init_struct(t_pd *pdinner, char **argv) // vamos iniciar a struct e salvar os args nas variáveis
+int	init_struct(t_pd *pdinner, char **argv)
 {
 	pdinner->stop = 0;
 	pdinner->nbr_meals = 0;
-	pdinner->nbr_philo = ft_atoi(argv[1]); // convertemos o argv em número e salvamos na variável correspondente
-	pdinner->time_to_starv = ft_atoi(argv[2]); // salvamos o argv virado int na variável correspondente
-	pdinner->time_eating = ft_atoi(argv[3]); // salvamos o argv virado int na variável correspondente
-	pdinner->time_sleeping = ft_atoi(argv[4]); // salvamos o argv virado int na variável correspondente
-	if (argv[5]) // se tievr o último arg, (número de refeições q cada um deve fazer...)
-		pdinner->nbr_meals = ft_atoi(argv[5]); // salvamos o argv virado int na variável correspondente
-	pdinner->philo = ft_calloc(pdinner->nbr_philo, sizeof(t_philo)); // allocamos e iniciamos zerado o array de filósofos
-	pdinner->fork = ft_calloc(pdinner->nbr_philo, sizeof(pthread_mutex_t)); // allocamos e iniciamos zerado o array de garfos
-	if (!pdinner->philo || !pdinner->fork) // se a alocação der errado
+	pdinner->nbr_philo = ft_atoi(argv[1]);
+	pdinner->time_to_starv = ft_atoi(argv[2]);
+	pdinner->time_eating = ft_atoi(argv[3]);
+	pdinner->time_sleeping = ft_atoi(argv[4]);
+	if (argv[5])
+		pdinner->nbr_meals = ft_atoi(argv[5]);
+	pdinner->philo = ft_calloc(pdinner->nbr_philo, sizeof(t_philo));
+	pdinner->fork = ft_calloc(pdinner->nbr_philo, sizeof(pthread_mutex_t));
+	if (!pdinner->philo || !pdinner->fork)
 	{
 		free(pdinner->philo);
-		free(pdinner->fork); // limpamos a allocação 
-		ft_putstr_fd("Malloc error...\n", 2); // avisamos o erro de malloc
+		free(pdinner->fork);
+		ft_putstr_fd("Malloc error...\n", 2);
 		free(pdinner);
-		return (0); // retornamos erro (0 = false)
+		return (0);
 	}
-	return (1); // se der td certo, retornamos 1
+	return (1);
 }
 
-int	init_mutex(t_pd *pdinner) // vamos iniciar as mutex
+int	init_mutex(t_pd *pdinner)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while (i < (int)pdinner->nbr_philo) //vamos iniciar uma mutex para cada garfo
+	while (i < (int)pdinner->nbr_philo)
 	{
-		if (pthread_mutex_init(&pdinner->fork[i], NULL)) // iniciamos a mutex dos garfos
-			break; // se a func pthread_mutex_init() voltar 1 é pq temos um erro// aí paramos esse while
+		if (pthread_mutex_init(&pdinner->fork[i], NULL))
+			break ;
 		i++;
 	}
-	if (i-- != (int)pdinner->nbr_philo || pthread_mutex_init(&pdinner->msg, NULL) || pthread_mutex_init(&pdinner->mstop, NULL)) 
+	if (i-- != (int)pdinner->nbr_philo || \
+	pthread_mutex_init(&pdinner->msg, NULL) || \
+	pthread_mutex_init(&pdinner->mstop, NULL))
 	{
 		while (i >= 0)
 			pthread_mutex_destroy(&pdinner->fork[i--]);
@@ -74,9 +76,9 @@ int	init_mutex(t_pd *pdinner) // vamos iniciar as mutex
 		free(pdinner->philo);
 		free(pdinner->fork);
 		free(pdinner);
-		return (0); // retornamos avisando o erro
+		return (0);
 	}
-	return (1); // retornamos avisando que está tudo ok
+	return (1);
 }
 
 void	free_struct(t_pd *pdinner)
@@ -84,24 +86,24 @@ void	free_struct(t_pd *pdinner)
 	int	i;
 
 	i = 0;
-	while (i < pdinner->nbr_philo) // enquanto i < número de filos
+	while (i < pdinner->nbr_philo)
 	{
-		if (pthread_join(pdinner->philo[i].thread, NULL)) //se tiver erro de join
-			ft_putstr_fd("Pthread_join error...\n", 2); // avisamos o erro
+		if (pthread_join(pdinner->philo[i].thread, NULL))
+			ft_putstr_fd("Pthread_join error...\n", 2);
 		i++;
 	}
-	free(pdinner->philo); // damos free no philo
+	free(pdinner->philo);
 	i = 0;
 	while (i < pdinner->nbr_philo)
 	{
-		if (pthread_mutex_destroy(&pdinner->fork[i])) //se tiver erro na função de destroi e desaloca os mutex dos garfos
-			ft_putstr_fd("Pthread_mutex_destroy error...\n", 2); // avisamos o erro
+		if (pthread_mutex_destroy(&pdinner->fork[i]))
+			ft_putstr_fd("Pthread_mutex_destroy error...\n", 2);
 		i++;
 	}
 	free(pdinner->fork);
-	if (pthread_mutex_destroy(&pdinner->msg)) //se tiver erro na função de destroi e desaloca o mutex da func de notificar as ações dos filósofos
-		ft_putstr_fd("Pthread_join error...\n", 2); // avisamos o erro
-	if (pthread_mutex_destroy(&pdinner->mstop)) //se tiver erro na função de destroi e desaloca o mutex da func de notificar as ações dos filósofos
-		ft_putstr_fd("Pthread_join error...\n", 2); // avisamos o erro
+	if (pthread_mutex_destroy(&pdinner->msg))
+		ft_putstr_fd("Pthread_join error...\n", 2);
+	if (pthread_mutex_destroy(&pdinner->mstop))
+		ft_putstr_fd("Pthread_join error...\n", 2);
 	free(pdinner);
 }

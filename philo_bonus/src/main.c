@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:59:51 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/14 12:05:28 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/16 12:37:30 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ time_t	get_time(void)
 void	print_event(t_pd *pdinner, t_philo *philo, char *event)
 {
 	time_t	time;
-	
+
 	time = get_time() - pdinner->init;
 	printf("%ld %d %s\n", time, philo->id, event);
 }
@@ -50,12 +50,12 @@ int	main(int argc, char **argv)
 		return (-1);
 	if (ft_atoi(argv[1]) == 1)
 		return (only_one(argv), 0);
-	pdinner = (t_pd *) ft_calloc(1, sizeof(t_pd)); // alocamos a struct e iniciamos td zerado
-	if (!init_struct(pdinner, argv))
-		return (-2);
-	if (!create_philo(pdinner))
-		return (-3);
+	pdinner = (t_pd *) ft_calloc(1, sizeof(t_pd));
+	init_struct(pdinner, argv);
+	init_philos(pdinner);
+	init_thread(pdinner);
 	kill_philo(pdinner);
 	free_struct(pdinner);
-	return (0); 
+	free (pdinner);
+	return (0);
 }

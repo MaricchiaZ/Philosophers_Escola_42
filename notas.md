@@ -141,6 +141,26 @@ O mutex é um semáforo binário, ou seja, ele pode ter apenas dois valores poss
 
 Os mutexes são importantes para evitar condições de corrida (Data racing) e inconsistências de dados em programas multithread. Eles também são usados em sistemas operacionais para controlar o acesso a recursos de hardware compartilhados, como impressoras e dispositivos de armazenamento.
 
+### Mandatório - esquema
+
+A mesa de jantar philo_dinner (pdinner) é uma struct e cada filósofo é uma outra struct (philo). Os filósofos estão organizados em um array de ponteiros para structs philo, e cada ponteiro aponta para uma struct philo referente a cada filósofo que está no jantar.
+
+### Bônus - esquema
+
+Para fazer o bônus, mudei a estrutura do jantar, e em vez de um array de ponteiros, estou optando por uma lista duplamente ligada e circular. Ou seja na lista ligada, temos o *next e o *prev (daí ser duplamente ligada), e além disso todos os philos estão na mesa, então tem *pdinner, um ponteiro pra mesa/evento do jantar (circular porque apontam o centro). Poderia ter mantido a mesma idéia do mandatório, mas queria usar mais lista ligada. 
+
+Apesar da ideia do bônus ser a mesma do mandatório precisamos modificar o código para utilizar multiprocessos em vez de multithreading, e é necessário substituir as funções relacionadas à criação e gerenciamento de threads pelas funções relacionadas à criação e gerenciamento de processos. Algumas das principais mudanças a serem feitas incluem:
+
+    Utilizar fork() para criar processos em vez de pthread_create() para criar threads.
+
+    Utilizar waitpid() em vez de pthread_join() para esperar pela finalização dos processos criados.
+
+    Utilizar kill() em vez de pthread_cancel() para enviar sinais aos processos criados.
+
+    Utilizar exit() em vez de pthread_exit() para encerrar um processo.
+
+    Utilizar sem_open(), sem_close(), sem_post(), sem_wait(), e sem_unlink() em vez de mutexes e variáveis de condição para sincronização entre os processos.
+
 #### Referências:
 
 https://embarcados.com.br/fork-exec-e-daemon/
