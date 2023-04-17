@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:00:56 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/17 11:37:24 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 16:25:41 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,15 @@
 typedef struct s_philo_dinner	t_pd;
 typedef struct s_philo			t_philo;
 
-// o bônus estou fazendo com lista duplamente ligada circular
 typedef struct s_philo
 {
 	int				id;
 	int				nbr_meals;
 	time_t			last_meal;
 	pid_t			pid;
-	t_philo			*next; // aponta pro next
-	t_philo			*prev; // aponta também pro philo anterior (por isso duplamente ligada)
-	t_pd			*pdinner; // todos philos apontam pro evento do jantar (circular)
+	t_philo			*next;
+	t_philo			*prev;
+	t_pd			*pdinner;
 }	t_philo;
 
 typedef struct s_philo_dinner
@@ -89,11 +88,6 @@ int		ft_str_isdigit(char *str);
 int		chek_str_int_positive(const char *nptr);
 int		ft_atoi(const char *nptr);
 void	*ft_calloc(size_t nmemb, size_t size);
-
-// // utils2.c
-// char	*ft_strjoin(char *s1, char const *s2);
-// char	*ft_itoa(int n);
-// int		ft_strcmp(char *s1, char *s2);
 
 // wait_process.c
 void	wait_process(t_pd *pdinner);

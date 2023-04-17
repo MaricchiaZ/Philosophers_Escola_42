@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:59:51 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/14 16:39:36 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 12:51:58 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,12 @@ time_t	get_time(void)
 void	print_event(t_pd *pdinner, t_philo *philo, char *event)
 {
 	time_t	time;
-	
+
+	sem_wait(pdinner->msg);
 	time = get_time() - pdinner->init;
-	printf("%ld %d %s\n", time, philo->id, event);
+	printf("%ld	%d %s\n", time, philo->id, event);
+	sem_post(pdinner->msg);
+	
 }
 
 void	only_one(char **argv)
@@ -50,13 +53,13 @@ int	main(int argc, char **argv)
 		return (-1);
 	if (ft_atoi(argv[1]) == 1)
 		return (only_one(argv), 0);
-	pdinner = (t_pd *) ft_calloc(1, sizeof(t_pd)); // alocamos a struct e iniciamos td zerado
-	if (!init_struct(pdinner, argv))
-		return (-2);
-	if (!create_philo(pdinner))
-		return (-3);
-	kill_philo(pdinner);
+	pdinner = (t_pd *) ft_calloc(1, sizeof(t_pd));
+	init_struct(pdinner, argv);
+	init_philo_and_sem(pdinner);
+	create_philo_process(pdinner);
+	sem_close(pdinner->msg);
+	sem_close(pdinner->fork);
 	free_struct(pdinner);
-	free (pdinner);
-	return (0); 
+	free(pdinner);
+	return (0);
 }

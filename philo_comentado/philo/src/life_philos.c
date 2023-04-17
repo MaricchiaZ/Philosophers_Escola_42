@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:46:12 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 18:08:25 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 16:23:56 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void	verify_death(t_pd *pdinner) // verifica se tds os filósofos estão vindo
 			}
 			i++; // vamos pro próximo filósofo
 		}
+		usleep(100);  // para dar tempo do aviso de parada ser visto por todas as threads
 		if (pdinner->stop == TRUE) // se temos o aviso pra parar...
 			return ; // retornamos
 	}

@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:29:41 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/17 11:37:55 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 16:26:43 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	*life(t_philo *aux)
 
 void	eat(t_philo *philo)
 {
+	t_pd	*aux;
+
 	sem_wait(philo->pdinner->fork);
 	print_event(philo->pdinner, philo, TAKEN_FORK);
 	sem_wait(philo->pdinner->fork);
@@ -41,8 +43,9 @@ void	eat(t_philo *philo)
 		sem_post(philo->pdinner->fork);
 		sem_close(philo->pdinner->fork);
 		sem_close(philo->pdinner->msg);
+		aux = philo->pdinner;
 		free_struct(philo->pdinner);
-		free(philo->pdinner);
+		free(aux);
 		exit(0);
 	}
 	verify_death(philo->pdinner->time_eating, philo);
@@ -58,9 +61,9 @@ void	to_sleep(t_philo *philo)
 
 void	think(t_philo *philo)
 {
-	print_event(philo->pdinner, philo, EATING);
+	print_event(philo->pdinner, philo, THINKING);
 	usleep(500);
-	while(*(int *)philo->pdinner->fork < 1)
+	while (*(int *)philo->pdinner->fork < 1)
 		verify_death(1, philo);
 }
 
@@ -68,9 +71,10 @@ void	verify_death(int time, t_philo *philo)
 {
 	time_t	init_time;
 	time_t	time_death;
-	
+	t_pd	*aux;
+
 	init_time = get_time();
-	while(get_time() - init_time <= time)
+	while (get_time() - init_time <= time)
 	{
 		if (get_time() - philo->last_meal > philo->pdinner->time_starv)
 		{
@@ -79,7 +83,9 @@ void	verify_death(int time, t_philo *philo)
 			printf("%ld %d %s\n", time_death, philo->id, "die");
 			sem_close(philo->pdinner->msg);
 			sem_close(philo->pdinner->fork);
+			aux = philo->pdinner;
 			free_struct(philo->pdinner);
+			free (aux);
 			exit (1);
 		}
 		usleep(100);

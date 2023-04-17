@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 11:09:40 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/17 11:36:18 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 16:28:40 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	create_philo_process(t_pd *pdinner)
 	nbr_philo = pdinner->nbr_philo;
 	aux = pdinner->philo;
 	pdinner->init = get_time();
-	while(nbr_philo > 0)
+	while (nbr_philo > 0)
 	{
 		aux->pid = fork();
 		if (aux->pid == 0)
@@ -33,16 +33,16 @@ void	create_philo_process(t_pd *pdinner)
 
 static void	add_list(t_philo *philo, t_pd *pdinner, int i)
 {
-	t_philo	*next_philo; // ponteiro pro novo filo q vamos por na lista
-	t_philo	*prev_philo; // ponteiro pro novo anterior do que estamos pondo na lista
+	t_philo	*next_philo;
+	t_philo	*prev_philo;
 
 	prev_philo = philo;
 	next_philo = (t_philo *) calloc (1, sizeof(t_philo));
 	next_philo->id = i + 1;
 	next_philo->nbr_meals = 0;
 	next_philo->pdinner = pdinner;
-	while (philo->next != prev_philo) // vamos avançar até o último philo da lista (ou já sentado na mesa)
-		philo = philo->next; //avançando
+	while (philo->next != prev_philo)
+		philo = philo->next;
 	philo->next = next_philo;
 	next_philo->next = prev_philo;
 	next_philo->prev = philo;
@@ -51,20 +51,20 @@ static void	add_list(t_philo *philo, t_pd *pdinner, int i)
 
 void	init_philo_and_sem(t_pd *pdinner)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	pdinner->msg = sem_open("msg", O_CREAT, 0664, 1);
 	pdinner->fork = sem_open("fork", O_CREAT, 0664, pdinner->nbr_philo);
 	sem_unlink("msg");
 	sem_unlink("fork");
-	pdinner->philo = (t_philo* ) ft_calloc(1, sizeof(t_philo));
+	pdinner->philo = (t_philo *) ft_calloc(1, sizeof(t_philo));
 	pdinner->philo->id = 1;
 	pdinner->philo->nbr_meals = 0;
 	pdinner->philo->next = pdinner->philo;
 	pdinner->philo->prev = pdinner->philo;
 	pdinner->philo->pdinner = pdinner;
-	while(++i < pdinner->nbr_philo)
+	while (++i < pdinner->nbr_philo)
 		add_list(pdinner->philo, pdinner, i);
 }
 

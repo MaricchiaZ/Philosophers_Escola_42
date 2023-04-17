@@ -14,7 +14,6 @@ SRCS	= $(PATH_SRC)main.c \
 		$(PATH_SRC)init_free.c \
 		$(PATH_SRC)life.c \
 		$(PATH_SRC)utils.c \
-		$(PATH_SRC)utils2.c \
 		$(PATH_SRC)wait_process.c \
 
 OBJS	= $(patsubst $(PATH_SRCS)%.c, $(PATH_OBJS)%.o, $(SRCS))

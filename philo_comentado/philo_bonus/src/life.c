@@ -6,102 +6,82 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:29:41 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/14 16:42:05 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 11:37:55 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	life(t_pd *pdinner, char *event)
+void	*life(t_philo *aux)
 {
-	sem_wait(pdinner->msg);
-	sem_wait(pdinner->philo.r_fork);
-	if (!ft_strcmp(event, EATING))
-	{
-		print_event(pdinner, &pdinner->philo, EATING);
-		pdinner->philo.last_meal = get_time();
-		pdinner->philo.nbr_meals++;
-		if(pdinner->philo.nbr_meals == pdinner->nbr_meals)
-			sem_post(pdinner->check_meals);
-	}
-	else
-		print_event(pdinner, &pdinner->philo, event);
-	sem_post(pdinner->philo.r_fork);
-	sem_post(pdinner->msg);
-}
-
-void	to_sleep(time_t microsec, t_pd  *pdinner) //
-{
-	time_t	init; //tempo agora
-
-	init = get_time(); //recebe o tempo agora 
-	while (get_time() - init < microsec) //enquanto n atingir os microseg
-	{
-		if (pdinner->nbr_philo < 100) // se o número de filósofos for menor do que 100
-			usleep(100); // dormem por 100 microseg
-		else // se for de 100 ou mais
-			usleep(1000); // dormem por 1000 microseg
-	}
-}
-
-void	*routine(t_pd *pdinner)
-{
-	if (pdinner->philo.id > pdinner->nbr_philo / 2)
-		to_sleep(pdinner->time_eating / 2, pdinner);
+	aux->last_meal = get_time();
+	if (!(aux->id % 2))
+		verify_death(aux->pdinner->time_eating, aux);
 	while (1)
 	{
-		sem_wait(pdinner->fork);
-		life(pdinner, TAKEN_FORK);
-		sem_wait(pdinner->fork);
-		life(pdinner, TAKEN_FORK);
-		life(pdinner, EATING);
-		to_sleep(pdinner->time_eating, pdinner);
-		life(pdinner, SLEEPING);
-		sem_post(pdinner->fork); // SUBIR ESSAS DUAS
-		sem_post(pdinner->fork);
-		to_sleep(pdinner->time_sleeping, pdinner);
-		life(pdinner, THINKING);
+		eat(aux);
+		to_sleep(aux);
+		think(aux);
 	}
-	return (NULL);
+	exit(0);
 }
 
-int	create_philo(t_pd *pdinner)
+void	eat(t_philo *philo)
 {
-	int i;
-
-	i = 0;
-	pdinner->init = get_time();
-	while(i < pdinner->nbr_philo) // while que vai criar cada um dos filósofos
+	sem_wait(philo->pdinner->fork);
+	print_event(philo->pdinner, philo, TAKEN_FORK);
+	sem_wait(philo->pdinner->fork);
+	print_event(philo->pdinner, philo, TAKEN_FORK);
+	philo->last_meal = get_time();
+	print_event(philo->pdinner, philo, EATING);
+	philo->nbr_meals++;
+	if (philo->nbr_meals == philo->pdinner->nbr_meals)
 	{
-		pdinner->philo.id = i + 1;
-		pdinner->pid[i] = fork();
-		if (pdinner->pid[i] == -1)
-		{
-			ft_putstr_fd("fork fail...\n", 2);
-			i--;
-			while (--i >= 0)
-				kill(pdinner->pid[i], SIGKILL);
-			return (free_struct(pdinner), free(pdinner), 0);
-		}
-		else if (pdinner->pid[i] == 0)
-		{
-			create_sem_fork(pdinner);
-			routine(pdinner);
-		}
-		i++;
+		sem_post(philo->pdinner->fork);
+		sem_post(philo->pdinner->fork);
+		sem_close(philo->pdinner->fork);
+		sem_close(philo->pdinner->msg);
+		free_struct(philo->pdinner);
+		free(philo->pdinner);
+		exit(0);
 	}
-	sem_wait(pdinner->stop); // paramos o stop
-	return (1);
+	verify_death(philo->pdinner->time_eating, philo);
+	sem_post(philo->pdinner->fork);
+	sem_post(philo->pdinner->fork);
 }
 
-void	kill_philo(t_pd *pdinner)
+void	to_sleep(t_philo *philo)
 {
-	int	i;
+	print_event(philo->pdinner, philo, SLEEPING);
+	verify_death(philo->pdinner->time_sleeping, philo);
+}
 
-	i = 0;
-	while(i < pdinner->nbr_philo)
+void	think(t_philo *philo)
+{
+	print_event(philo->pdinner, philo, EATING);
+	usleep(500);
+	while(*(int *)philo->pdinner->fork < 1)
+		verify_death(1, philo);
+}
+
+void	verify_death(int time, t_philo *philo)
+{
+	time_t	init_time;
+	time_t	time_death;
+	
+	init_time = get_time();
+	while(get_time() - init_time <= time)
 	{
-		kill(pdinner->pid[i], SIGKILL);
-		i++;
+		if (get_time() - philo->last_meal > philo->pdinner->time_starv)
+		{
+			sem_wait(philo->pdinner->msg);
+			time_death = get_time() - philo->pdinner->init;
+			printf("%ld %d %s\n", time_death, philo->id, "die");
+			sem_close(philo->pdinner->msg);
+			sem_close(philo->pdinner->fork);
+			free_struct(philo->pdinner);
+			exit (1);
+		}
+		usleep(100);
 	}
 }

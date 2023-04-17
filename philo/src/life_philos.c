@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:46:12 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/14 17:07:03 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/17 16:17:50 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void	verify_death(t_pd *pdinner)
 			}
 			i++;
 		}
+		usleep(100);
 		if (pdinner->stop == TRUE)
 			return ;
 	}
