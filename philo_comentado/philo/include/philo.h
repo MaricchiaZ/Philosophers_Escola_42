@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:16:46 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 18:33:18 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/23 11:21:43 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,39 +24,39 @@
 # define CONTINUE	0
 # define FALSE		0
 # define TRUE		1
-# define INT_MAX	2147483647
-# define EATING		"is eating"
-# define THINKING	"is thinking"
-# define SLEEPING	"is sleeping"
-# define TAKEN_FORK	"has taken a fork"
+# define INT_MAX	2147483647 // pra conferir se os argumentos ultrapassam o int max
+# define EATING		"is eating" // mensagem que colocamos no terminal conforme os filósofos são fazendo as atividades
+# define THINKING	"is thinking" // ''
+# define SLEEPING	"is sleeping" // ''
+# define TAKEN_FORK	"has taken a fork" // ''
 
 typedef struct s_philo_dinner   t_pd;
 
 typedef struct  s_philo
 {
-	int				id;
-	pthread_t		thread;
-	pthread_mutex_t	*r_fork;
-	pthread_mutex_t	*l_fork;
-	time_t			last_meal;
-	int				nbr_meals;
-	int				stop;
-	t_pd			*pdinner;
+	int				id; // o número do filósofo à mesa
+	pthread_t		thread; // a tread dele
+	pthread_mutex_t	*r_fork; // o garfo direito que é o que ele traz de casa
+	pthread_mutex_t	*l_fork; // o garfo esquerdo (que ele pega emprestado do filósofo ao lado)
+	time_t			last_meal; // que horas foi a última vez que ele comeu
+	int				nbr_meals; // o número de refeições que ele fez
+	int				stop; // flag para avisar que deve parar a simulação
+	t_pd			*pdinner; // ponteiro para a "mesa de jantar"
 }   t_philo;
 
 typedef struct s_philo_dinner
 {
-	t_philo			*philo;
-	int				nbr_philo;
-	time_t			time_to_starv;
-	time_t			time_eating;
-	time_t			time_sleeping;
-	int				nbr_meals;
-	pthread_mutex_t	*fork;
-	pthread_mutex_t	msg;
-	pthread_mutex_t	mstop;
-	time_t			init;
-	int				stop;
+	t_philo			*philo; // ponteiro pro filo
+	int				nbr_philo; // número total de filósofos que vieram para o jantar
+	time_t			time_to_starv; // tempo que eles aguentam até morrer de fome (starv = inanição em inglês)
+	time_t			time_eating; // tempo que eles gastam dormindo
+	time_t			time_sleeping; // tempo que eles gastam comendo
+	int				nbr_meals; // número de refeições que eles devem fazer
+	pthread_mutex_t	*fork; // mutex pra travar o acesso aos garfos
+	pthread_mutex_t	msg; // mutex pra travar o acesso a escrita de mensagens no terminal (e não misturar uma mensagem com a outra)
+	pthread_mutex_t	mstop; // mutex pra travar o acesso á flag de parada
+	time_t			init; // salvamos o horário que começa o jantar
+	int				stop; // flag de parada
 }   s_pd;
 
 // check_args.c
