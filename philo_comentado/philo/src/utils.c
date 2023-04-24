@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 07:16:17 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/13 15:17:39 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/24 06:14:29 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,4 +130,3 @@ void	*ft_calloc(size_t nmemb, size_t size) //recebe o número de membros e o tam
 	}
 	return (tab); //retornamos nosso ponteiro para os bytes alocados e "limpos"
 }
-

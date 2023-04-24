@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:00:56 by maclara-          #+#    #+#             */
-/*   Updated: 2023/04/17 11:37:24 by maclara-         ###   ########.fr       */
+/*   Updated: 2023/04/23 13:24:26 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@
 # define CONTINUE	0
 # define FALSE		0
 # define TRUE		1
-# define INT_MAX	2147483647
-# define EATING		"is eating"
-# define THINKING	"is thinking"
-# define SLEEPING	"is sleeping"
-# define TAKEN_FORK	"has taken a fork"
-# define DIED		"died"
+# define INT_MAX	2147483647 // valor do INT_MAX que vamos usar 
+# define EATING		"is eating" // mensagens que vamos imprimir quando os filósofos fazem uma ação
+# define THINKING	"is thinking" // ' '
+# define SLEEPING	"is sleeping" // ' '
+# define TAKEN_FORK	"has taken a fork" // ' '
+# define DIED		"died" // ' '
 
 typedef struct s_philo_dinner	t_pd;
 typedef struct s_philo			t_philo;
@@ -39,10 +39,10 @@ typedef struct s_philo			t_philo;
 // o bônus estou fazendo com lista duplamente ligada circular
 typedef struct s_philo
 {
-	int				id;
-	int				nbr_meals;
-	time_t			last_meal;
-	pid_t			pid;
+	int				id; // número do filósofo
+	int				nbr_meals; // número de refeições que ele fez
+	time_t			last_meal; // horário da última refeição
+	pid_t			pid; // pid do processo que representa esse filósofo
 	t_philo			*next; // aponta pro next
 	t_philo			*prev; // aponta também pro philo anterior (por isso duplamente ligada)
 	t_pd			*pdinner; // todos philos apontam pro evento do jantar (circular)
@@ -50,16 +50,16 @@ typedef struct s_philo
 
 typedef struct s_philo_dinner
 {
-	t_philo	*philo;
-	time_t	init;
-	int		nbr_philo;
-	int		nbr_meals;
-	int		time_starv;
-	int		time_eating;
-	int		time_sleeping;
-	int		stop;
-	sem_t	*fork;
-	sem_t	*msg;
+	t_philo	*philo; // filósofo
+	time_t	init; // horário que se inicia a simulação
+	int		nbr_philo; // número de filósofos à mesa
+	int		nbr_meals; // número de refeições que ele deve fazer
+	int		time_starv; // tempo até ele morrer de fome (starv = inanição em inglês)
+	int		time_eating; // tempo que eles gastam comendo
+	int		time_sleeping; // tempo que eles gastam dormindo
+	int		stop; // flag para parar a simulaçao
+	sem_t	*fork; // semáforo para os garfos
+	sem_t	*msg; // semáforo para a mensagem
 }	t_pd;
 
 // check_args
@@ -89,11 +89,6 @@ int		ft_str_isdigit(char *str);
 int		chek_str_int_positive(const char *nptr);
 int		ft_atoi(const char *nptr);
 void	*ft_calloc(size_t nmemb, size_t size);
-
-// // utils2.c
-// char	*ft_strjoin(char *s1, char const *s2);
-// char	*ft_itoa(int n);
-// int		ft_strcmp(char *s1, char *s2);
 
 // wait_process.c
 void	wait_process(t_pd *pdinner);
